@@ -2,33 +2,42 @@
 
 export default function LogisticsHUD({ myRole, companyCode, routeInfo, vehicle, setVehicle, handleSignOut, calculateRoute, isLoading, destination }) {
   return (
-    <div className="absolute bottom-8 left-4 right-4 z-10 bg-gray-900/95 backdrop-blur-md p-4 rounded-2xl border border-gray-800 shadow-2xl">
-      <div className="text-[10px] text-center font-bold tracking-widest text-indigo-400 uppercase mb-2 bg-indigo-950/40 py-1 rounded-md border border-indigo-900/50">
-        Ruolo: {myRole} {companyCode && `[${companyCode}]`}
-      </div>
+    <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent">
+      <div className="bg-white/10 backdrop-blur-xl border border-white/10 p-5 rounded-3xl shadow-2xl">
+        
+        {/* Info Percorso (più leggibile) */}
+        {routeInfo && (
+          <div className="flex justify-around mb-5">
+            <div className="text-center">
+              <p className="text-[10px] uppercase text-white/50 font-bold tracking-widest">Distanza</p>
+              <p className="text-xl font-black text-white">{routeInfo.distance} km</p>
+            </div>
+            <div className="w-px h-10 bg-white/10"></div>
+            <div className="text-center">
+              <p className="text-[10px] uppercase text-white/50 font-bold tracking-widest">Tempo</p>
+              <p className="text-xl font-black text-blue-400">{routeInfo.duration} min</p>
+            </div>
+          </div>
+        )}
 
-      {routeInfo && (
-        <div className="grid grid-cols-2 gap-2 mb-3 bg-gray-800/50 p-3 rounded-xl border border-gray-800 text-center">
-          <div><span className="text-[10px] text-gray-400 block uppercase tracking-wider">Distanza</span><span className="text-lg font-bold text-white">{routeInfo.distance} km</span></div>
-          <div><span className="text-[10px] text-gray-400 block uppercase tracking-wider">Tempo</span><span className="text-lg font-bold text-white">{routeInfo.duration} min</span></div>
+        {/* Bottone principale (CTA) */}
+        <button 
+          onClick={calculateRoute} 
+          disabled={isLoading} 
+          className="w-full py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl font-black text-white transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+        >
+          {isLoading ? "Calcolo in corso..." : !destination ? "Seleziona destinazione" : "Vai a destinazione"}
+        </button>
+
+        {/* Impostazioni (più sottili) */}
+        <div className="mt-4 flex gap-2">
+          <select className="flex-1 bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs font-bold" value={vehicle} onChange={(e) => setVehicle(e.target.value)}>
+            <option value="driving-car">🚐 Furgone</option>
+            <option value="cycling-electric">⚡ E-Bike</option>
+          </select>
+          <button onClick={handleSignOut} className="px-4 bg-white/5 border border-white/10 rounded-xl text-white/50 text-xs">Esci</button>
         </div>
-      )}
-
-      <div className="flex gap-2 mb-3">
-        <select className="flex-1 p-3.5 rounded-xl bg-gray-800 text-white outline-none border border-gray-700 text-sm font-medium" value={vehicle} onChange={(e) => setVehicle(e.target.value)}>
-          <option value="driving-car"> Vans / Furgone Aziendale</option>
-          <option value="cycling-electric">⚡ Cargo E-Bike</option>
-        </select>
-        <button onClick={handleSignOut} className="p-3.5 bg-gray-800 text-gray-400 rounded-xl font-bold border border-gray-700 text-xs hover:bg-red-950/30 hover:text-red-400 transition-colors">Esci</button>
       </div>
-      
-      <button 
-        onClick={calculateRoute} 
-        disabled={isLoading} 
-        className={`w-full p-4 rounded-xl font-bold text-sm transition-all shadow-lg ${!destination ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-500'}`}
-      >
-        {!destination ? "Tocca la mappa per impostare la rotta" : isLoading ? "Ottimizzazione rotta..." : "Calcola Navigazione Ottimizzata"}
-      </button>
     </div>
   );
 }
