@@ -1,29 +1,25 @@
 ﻿"use client";
-import { useState } from 'react';
-import MapContainer from '@/components/MapContainer';
-import LogisticsHUD from '@/components/LogisticsHUD';
+import { useState, useEffect } from 'react';
+import LoginScreen from '@/components/LoginScreen';
 
 export default function SpeedyMapApp() {
-  const [vehicle, setVehicle] = useState('driving-car');
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
-  const calculateRoute = () => {
-    setIsLoading(true);
-    // Qui aggiungeremo la logica API dopo la conferma della visualizzazione
-    setTimeout(() => setIsLoading(false), 1000); 
-  };
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  return (
-    <div className="relative w-full h-screen bg-black">
-      <MapContainer viewport={{ longitude: 13.3615, latitude: 38.1157, zoom: 14 }} />
-      <LogisticsHUD 
-        vehicle={vehicle} 
-        setVehicle={setVehicle} 
-        calculateRoute={calculateRoute} 
-        isLoading={isLoading} 
-        destination={true}
-        myRole="Corriere"
-      />
-    </div>
-  );
+  if (!mounted) return <div className="text-white">Caricamento...</div>;
+
+  try {
+    return (
+      <div className="relative w-full h-screen bg-black text-white flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold mb-4">SpeedyMap</h1>
+        <LoginScreen />
+      </div>
+    );
+  } catch (err) {
+    return <div className="p-10 text-red-500">ERRORE: {err.message}</div>;
+  }
 }
