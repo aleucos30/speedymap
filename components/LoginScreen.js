@@ -6,12 +6,12 @@ export default function LoginScreen({
   setEmail, 
   setPassword, 
   handleLogin, 
-  handleRegister, // Nuova funzione passata dal padre
+  handleRegister, 
   handleGoogleLogin, 
   authLoading 
 }) {
   const [isRegistering, setIsRegistering] = useState(false);
-  const [userRole, setUserRole] = useState('privato'); // privato, azienda, dipendente
+  const [userRole, setUserRole] = useState('privato'); // privato o dipendente
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -33,15 +33,16 @@ export default function LoginScreen({
 
       <div className="w-full max-w-md bg-gray-800/50 backdrop-blur-md p-6 rounded-2xl border border-gray-700/50 shadow-2xl space-y-5">
         
-        {/* Toggle sopra per scambiare Login e Registrazione */}
         <div className="flex bg-gray-900 p-1 rounded-xl border border-gray-700">
           <button 
+            type="button"
             onClick={() => setIsRegistering(false)} 
             className={lex-1 py-2 text-xs font-bold rounded-lg transition-all \}
           >
             ACCEDI
           </button>
           <button 
+            type="button"
             onClick={() => setIsRegistering(true)} 
             className={lex-1 py-2 text-xs font-bold rounded-lg transition-all \}
           >
@@ -59,12 +60,12 @@ export default function LoginScreen({
             <input type="password" placeholder="••••••••" required className="w-full p-3.5 rounded-xl bg-gray-900/80 text-white border border-gray-700 focus:border-blue-500 outline-none text-sm" onChange={(e) => setPassword(e.target.value)} />
           </div>
 
-          {/* SEZIONE SELEZIONE RUOLO: Compare solo se l'utente sta cliccando su Registrati */}
+          {/* Scelta Ruolo protetta: Esclusa l'Azienda dall'autoregistrazione */}
           {isRegistering && (
             <div className="space-y-2 animate-fadeIn">
               <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Tipo di Profilo</label>
-              <div className="grid grid-cols-3 gap-2">
-                {['privato', 'azienda', 'dipendente'].map((role) => (
+              <div className="grid grid-cols-2 gap-2">
+                {['privato', 'dipendente'].map((role) => (
                   <button
                     key={role}
                     type="button"
@@ -76,9 +77,11 @@ export default function LoginScreen({
                 ))}
               </div>
               <p className="text-[11px] text-gray-500 text-center mt-1 italic">
-                {userRole === 'privato' && "✓ Ideale per rider singoli o autonomi."}
-                {userRole === 'azienda' && "✓ Gestisci flotte, corrieri e abbonamenti."}
-                {userRole === 'dipendente' && "✓ Collegati alla tua azienda logistica partner."}
+                {userRole === 'privato' && "✓ Account per rider autonomi e corrieri singoli."}
+                {userRole === 'dipendente' && "✓ Collegati alla tua azienda per ricevere i percorsi."}
+              </p>
+              <p className="text-[10px] text-center text-amber-500/80 mt-2 bg-amber-950/20 py-1.5 rounded-lg border border-amber-900/30">
+                Sei un'azienda di logistica? <br/> Contattaci per l'attivazione manuale della dashboard flotta.
               </p>
             </div>
           )}

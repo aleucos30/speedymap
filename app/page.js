@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import MapContainer from '@/components/MapContainer';
@@ -159,7 +159,7 @@ export default function SpeedyMapApp() {
   }
 
   // Estraiamo il ruolo dell'utente correntemente loggato per scopi futuri
-  const userMetadataRole = session.user.user_metadata?.role || 'privato';
+  const userMetadataRole = session.user.user_metadata?.role === 'azienda' ? 'azienda' : (session.user.user_metadata?.role || 'privato');
 
   return (
     <div className="relative w-full h-screen bg-black">
@@ -178,7 +178,7 @@ export default function SpeedyMapApp() {
       {ztlAlert && (
         <div className="absolute top-4 left-4 right-4 z-20 bg-red-950/95 backdrop-blur-md border border-red-500/50 p-4 rounded-xl shadow-2xl">
           <div className="flex items-center gap-3">
-            <span className="text-xl">⚠️</span>
+            <span className="text-xl">??</span>
             <div>
               <h4 className="text-red-400 font-bold text-xs uppercase tracking-wider">ZTL Radar Detection</h4>
               <p className="text-gray-300 text-xs mt-0.5">Destinazione all'interno della ZTL commerciale attiva. Verifica autorizzazioni furgone.</p>
@@ -211,7 +211,7 @@ export default function SpeedyMapApp() {
         <div className="flex gap-2 mb-3">
           <select className="flex-1 p-3.5 rounded-xl bg-gray-800 text-white outline-none border border-gray-700 text-sm font-medium" value={vehicle} onChange={(e) => setVehicle(e.target.value)}>
             <option value="driving-car"> Vans / Furgone Aziendale</option>
-            <option value="cycling-electric">⚡ Cargo E-Bike</option>
+            <option value="cycling-electric">? Cargo E-Bike</option>
           </select>
           <button onClick={() => supabase.auth.signOut()} className="p-3.5 bg-gray-800 text-gray-400 rounded-xl font-bold border border-gray-700 text-xs">Esci</button>
         </div>
