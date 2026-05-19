@@ -1,25 +1,31 @@
 ﻿"use client";
 import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import LoginScreen from '@/components/LoginScreen';
+import MapContainer from '@/components/MapContainer';
+
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
 export default function SpeedyMapApp() {
-  const [error, setError] = useState(null);
-  const [mounted, setMounted] = useState(false);
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
   }, []);
 
-  if (!mounted) return <div className="text-white">Caricamento...</div>;
+  if (loading) return <div className="text-white text-center mt-20">Caricamento in corso...</div>;
 
-  try {
-    return (
-      <div className="relative w-full h-screen bg-black text-white flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-bold mb-4">SpeedyMap</h1>
+  return (
+    <div className="relative w-full h-screen bg-black">
+      {!session ? (
         <LoginScreen />
-      </div>
-    );
-  } catch (err) {
-    return <div className="p-10 text-red-500">ERRORE: {err.message}</div>;
-  }
+      ) : (
+        <MapContainer viewport={{ longitude: 13.3615, latitude: 38.1157, zoom: 14 }} />
+      )}
+    </div>
+  );
 }
